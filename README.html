@@ -1,0 +1,32 @@
+<h1>wxGAI</h1>
+<h2>Desktop Front-End for Google Gemini Query</h2>
+<p><img alt="wxAI" src="images/wxAI_1g.png" title="wxAI" /></p>
+<p>wxGAI is similar to <a href="https://github.com/MLeidel/wxAI" title="Git Website">wxAI</a> which uses OpenAI.</p>
+<p>You will need an Google AI Studio api-key to use this program.</p>
+<p>wxGAI is written in Python3 with wxPython producing 
+the theme integrated GTK GUI look-and-feel
+on Linux and a true <em>light</em> theme look on Windows.</p>
+<p>The wxGAI <code>options.ini</code> file must be edited manually.</p>
+<p>At this time this is what an <code>options.ini</code> might contain:</p>
+<pre><code>    # wxGAI.py
+    gemini=MyKey
+    model=gemini-2.0-flash-lite
+    role=you are a helpful coding assistant
+    log=on
+    fontsz1=10
+    fontsz2=12
+</code></pre>
+<p>The <strong>Export</strong> button converts the markdown response to HTML and presents it in the
+system default browser. </p>
+<p>The other function buttons are self explanatory.</p>
+<p>wxAI requires these other python3 modules:</p>
+<pre><code>    markdown
+    wx
+    google.generativeai
+</code></pre>
+<p>To run:</p>
+<pre><code>  $ python3 wxGAI.py
+</code></pre>
+<hr />
+<h2>Environment Variables</h2>
+<h3><a href="https://linuxize.com/post/how-to-set-and-list-environment-variables-in-linux/" title="How To">Linux</a> <a href="https://superuser.com/questions/949560/how-do-i-set-system-environment-variables-in-windows-10/" title="How To">Windows</a></h3>
