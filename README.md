@@ -5,7 +5,7 @@
 
 wxGAI is similar to [wxAI](https://github.com/MLeidel/wxAI "Git Website") which uses OpenAI.
 
-You will need an Google AI Studio api-key to use this program.
+You will need a Google AI Studio api-key to use this program.
 
 wxGAI is written in Python3 with wxPython producing 
 the theme integrated GTK GUI look-and-feel
@@ -28,7 +28,7 @@ system default browser.
 
 The other function buttons are self explanatory.
 
-wxAI requires these other python3 modules:
+wxGAI requires these other python3 modules:
 
         markdown
         wx
