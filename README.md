@@ -28,6 +28,19 @@ system default browser.
 
 The other function buttons are self explanatory.
 
+---
+
+## Hot Keys
+
+        Ctrl-H     This help message
+        Ctrl-F     Find text
+        Ctrl-N     Find next
+        Ctrl-Q     Quit App
+        Ctrl-G     Execute AI request
+        Alt-Ctrl-C
+                   Copy Code in Markup
+---
+
 wxGAI requires these other python3 modules:
 
         markdown

@@ -27,7 +27,7 @@ log: {opts[5]}
 '''
 
 class MyFrame(wx.Frame):
-    def __init__(self, parent, title="wxGAI V1.0 Google " + opts[1]):
+    def __init__(self, parent, title="wxGAI V1.1 Google " + opts[1]):
         super(MyFrame, self).__init__(parent, title=title, size=(600, 550))
 
         panel = wx.Panel(self)
@@ -291,16 +291,100 @@ class MyFrame(wx.Frame):
         keycode = event.GetKeyCode()
         modifiers = event.GetModifiers()
 
-        # Check if Ctrl is pressed and the key is 'G'
-        if modifiers == wx.MOD_CONTROL and keycode == ord('G'):
+        if modifiers == (wx.MOD_CONTROL | wx.MOD_ALT) and keycode == ord('C'):  # Ctrl-Alt C on copy code
+            self.on_copy_code()
+        elif modifiers == wx.MOD_CONTROL and keycode == ord('F'):  # Ctrl+F: open search dialog.
+            self.doSearchDialog()
+        elif modifiers == wx.MOD_CONTROL and keycode == ord('N'):  # Ctrl+N: find next occurrence.
+            self.findNext()
+        elif modifiers == wx.MOD_CONTROL and keycode == ord('G'):
             self.on_submit(event)
-        else:
-            event.Skip()  # Ensure other key events are processed
-        # Check if Ctrl is pressed and the key is 'Q'
-        if modifiers == wx.MOD_CONTROL and keycode == ord('Q'):
+        elif modifiers == wx.MOD_CONTROL and keycode == ord('Q'):
             self.on_close(event)
+        elif modifiers == wx.MOD_CONTROL and keycode == ord('H'):  # Ctrl+F: open search dialog.
+            self.on_help_dialog()
         else:
             event.Skip()  # Ensure other key events are processed
+
+
+    def doSearchDialog(self):
+        # Open a dialog to accept search text.
+        dlg = wx.TextEntryDialog(self, "Enter text to search:", "Find")
+        if dlg.ShowModal() == wx.ID_OK:
+            self.search_text = dlg.GetValue()
+            # Start search from current insertion point.
+            self.search_pos = self.text2.GetInsertionPoint()
+            self.findNext()
+        dlg.Destroy()
+
+    def findNext(self):
+        if not self.search_text:
+            return  # Nothing to search.
+
+        # Get the full text from the TextCtrl.
+        full_text = self.text2.GetValue()
+        # For a case–insensitive search, convert both full text and search string to lower case.
+        lower_text = full_text.lower()
+        lower_search = self.search_text.lower()
+
+        # Search from the current position.
+        idx = lower_text.find(lower_search, self.search_pos)
+        if idx == -1:
+            # Optionally, notify the user if the search text is not found:
+            wx.MessageBox(f'"{self.search_text}" was not found.', "Find", wx.OK | wx.ICON_INFORMATION)
+            # Reset search position for a new search.
+            self.search_pos = 0
+        else:
+            # Set focus to the TextCtrl and highlight the found text.
+            self.text2.SetFocus()
+            self.text2.ShowPosition(idx)
+            self.text2.SetSelection(idx, idx + len(self.search_text))
+            # Update the search position for next search.
+            self.search_pos = idx + len(self.search_text)
+
+    def on_copy_code(self):
+        text = self.text2.GetValue()
+        lines = text.splitlines()
+        result = []
+        in_backticks = False
+
+        for line in lines:
+            if line.startswith('```'):
+                if in_backticks:
+                    break
+                else:
+                    in_backticks = True
+                    continue
+            else:
+                if in_backticks:
+                    result.append(line)  # Collect lines within the back-ticked region
+
+        # Join selected text and put it to the clipboard
+        if result:
+            clipboard_text = '\n'.join(result)
+            self.set_clipboard(clipboard_text)
+            wx.MessageBox('Copied to clipboard', "Code")
+        else:
+            wx.MessageBox('No text found between triple back-ticks.')
+
+    def set_clipboard(self, text):
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(wx.TextDataObject(text))
+            wx.TheClipboard.Close()
+
+
+    def on_help_dialog(self):
+        msg = '''
+        Ctrl-H     This help message\n
+        Ctrl-F     Find text\n
+        Ctrl-N     Find next\n
+        Ctrl-Q     Quit App\n
+        Ctrl-G     Execute AI request\n
+        Alt-Ctrl-C
+                   Copy Code in Markup\n
+        '''
+        #wx.MessageBox(msg)
+        wx.MessageBox(msg, 'Hot Keys' , wx.OK)
 
 
 class MyApp(wx.App):
