@@ -8,6 +8,7 @@ import markdown
 import webbrowser
 import wx
 import platform
+from time import gmtime, strftime
 import google.generativeai as genai
 
 opts = [] # loading options from the options.ini file into a list
@@ -261,10 +262,13 @@ class MyFrame(wx.Frame):
         self.text2.SetValue(aitext.text)
         # append to log.md
         if opts[5].lower() == "on":
+            today = strftime("%a %d %b %Y", gmtime())
+            tm = strftime("%H:%M")
             with open("log.md", "a", encoding='utf-8') as fout:
-                fout.write("\n\n=================================\n\n")
+                fout.write("\n\n=================================== " + today + " " + tm + "\n")
+                fout.write(query)
+                fout.write("\n=====================================\n\n")
                 fout.write(aitext.text)
-
 
     def gptCode(self, key: str, model: str, query: str) -> str:
         ''' method to access Gemini API '''
